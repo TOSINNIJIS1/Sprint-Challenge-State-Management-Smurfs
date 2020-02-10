@@ -1,51 +1,62 @@
-import React, {useState, useContext} from 'react';
-import { smurfsContext } from '../contexts/context'
+
+import React, {useState} from 'react';
+import {newSmurf} from "../contexts/context"
+import { connect } from 'react-redux';
+
+const Form = props => {
 
 
-export default function Form () {
-
-    const { Smurfs } = useContext(smurfsContext)
-
-
-    const [addSmurf, setAddSmurf] = useState({
+    const [formSmurf, setFormSmurf] = useState({
         name: '',
         age: '',
-        height: '',
-    });
-
-
-    const onChange = e => {
-        const changeSmurf = e.target.name;
-        setAddSmurf({
-            ...addSmurf, [changeSmurf]: e.target.value,
-        })
-    }
-
+        height: ''
+    })
     const onSubmit = e => {
         e.preventDefault();
-        Smurfs(addSmurf);
-        console.log(Smurfs)
+        props.newSmurf(formSmurf)
+    }
+    const onChange = e => {
+        setFormSmurf({
+            ...formSmurf, [e.target.name]: e.target.value
+            
+        })
+        
     }
 
+    return(
+        <div className="App">
 
-    return (
-        <div>
             <form onSubmit={onSubmit}>
-                <label>
-                    <input type='text' name='name' placeholder="Add Name" onChange={onChange} />
-                </label>
+                <label> Name: </label>
+                <input type="text" 
+                name="name"
+                onChange={onChange}
+                value={formSmurf.name}
+                />
 
-                <label>
-                    <input type='text' name='age' placeholder="Add Age" onChange={onChange} />
-                </label>
+                <label> Age: </label>
+                <input type="number" 
+                name="age"
+                onChange={onChange}
+                value={formSmurf.age}
+                />
 
-                <label>
-                    <input type='text' name='height' placeholder="Add Height" onChange={onChange} />
-                </label>
+                <label> height: </label>
+                <input type="text" 
+                name="height"
+                onChange={onChange}
+                value={formSmurf.height}
+                />
 
-                <button type='submit' > Submit </button>
+                <input type='submit'/>
+                
             </form>
 
         </div>
     )
 }
+const mapStateToprops = state => {
+    return {state};
+};
+
+export default connect(mapStateToprops, {newSmurf})(Form)

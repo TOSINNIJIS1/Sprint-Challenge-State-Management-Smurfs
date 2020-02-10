@@ -1,27 +1,40 @@
-import React, { useContext } from 'react'
-import  {smurfsContext}  from '../contexts/context'
 
+import React, {useEffect} from 'react';
+import { connect } from 'react-redux';
 
-const Map = () => {
-    const {smurf} = useContext(smurfsContext)
+import { fetchSmurfs, newSmurf } from '../contexts/context';
+import Form from './form'
 
-    return (
+const Smurf = props => {
+    console.log(props)
+
+    const onClick = props.fetchSmurfs
+    useEffect(() => {
+        onClick()
+    }, [onClick])
+
+    console.log(fetchSmurfs)
+
+    return(
         <div>
-            {smurf.map(e => {
-                return (
-                    <div className="App-header" key={e.id}>
-                        Name: {e.name}
-                        Age: {e.age}
-                        ID: {e.id}
-                        Height: {e.height}
-                    </div>
-                )
+            {props.smurf.map(e => {
+                console.log(e)
+                return(
+                <div key={e.id}>
+                    Name: {e.name}
+                    Age: {e.age}
+                    Height: {e.height}
+                    <button onClick={onClick}> Click </button>
+                    <Form newSmurf={props.newSmurf}/>
+                </div>)
             })}
         </div>
     )
 
 }
+const mapStateToProps = state => ({
+    smurf: state.smurf,
+    error: state.error
+})
 
-
-
-export default Map;
+export default connect(mapStateToProps, {fetchSmurfs, newSmurf} )(Smurf)
